@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <title>Painting App</title>
+        <style type="text/css">
+            * {
+                padding: 0px;
+                margin:0px;
+            }
+            #canvas {
+                border: 1px solid #000;
+            }
+            #color {
+                padding: 0;
+                border: 0;
+                background: none;
+                width: 45px;
+                height: 45px;
+
+            }
+
+            #thickness {
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="controls">
+            <input type="color" id="color">
+            <input type="number" value="3" id="thickness">
+
+        </div>
+        <canvas id="canvas" width="500" height="500"></canvas>
+        <script type="text/javascript">
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext("2d");
+
+            ctx.fillStyle = "white";
+            ctx.fillRect(0,0, 500,500);
+            ctx.fillStyle = "black";
+
+            let brushColor = "black";
+            let brushSize  = 3;
+
+            document.getElementById("color").addEventListener("change", function() {
+                brushColor = this.value;
+            });
+            document.getElementById("thickness").addEventListener("change", function() {
+                brushSize = this.value;
+            });
+
+            let painting = false;
+
+            function paintingStart(e)     {
+                painting = true;
+                draw(e);
+            }
+
+            function paintingEnd(e) {
+                painting = false;
+                ctx.beginPath();
+            }
+
+            function draw(e) {
+                let x = e.clientX;
+                let y = e.clientY - canvas.offsetTop;
+
+                if(painting === false) 
+                    retrun;
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = "round";
+                ctx.lineTo(x,y);
+                ctx.strokeStyle = brushColor;
+                ctx.stroke();
+
+            }
+
+            canvas.addEventListener("mousedown", paintingStart);
+            canvas.addEventListener("mouseup", paintingEnd);
+            canvas.addEventListener("mousemove", draw);
+
+        </script>
+
+    </body>
+</html>
